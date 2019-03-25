@@ -44,7 +44,7 @@ TensorFlowSession::TensorFlowSession(const char* graph_filename, const char* inp
 
   TF_Buffer* buffer = ReadBufferFromFile(graph_filename);
   if (buffer == nullptr) {
-    std::cout << "A" << std::endl; // Error handling.
+    // Error handling.
   }
 
   TF_GraphImportGraphDef(graph_, buffer, graph_options, status_);
@@ -53,16 +53,14 @@ TensorFlowSession::TensorFlowSession(const char* graph_filename, const char* inp
 
   if (TF_GetCode(status_) != TF_OK) {
     TF_DeleteGraph(graph_);
-    //Error handling.
+    // Error handling.
     graph_ = nullptr;
-    std::cout << "B" << std::endl;
   }
 
   session_ = TF_NewSession(graph_, session_options, status_);
   TF_DeleteSessionOptions(session_options);
   if (TF_GetCode(status_) != TF_OK) {
     // Error handling.
-    std::cout << "C" << std::endl;
   }
   input_operation_ = {{TF_GraphOperationByName(graph_, input_operation_name), 0}};
   output_operation_ = {{TF_GraphOperationByName(graph_, output_operation_name), 0}};
@@ -70,44 +68,34 @@ TensorFlowSession::TensorFlowSession(const char* graph_filename, const char* inp
 
 TensorFlowSession::~TensorFlowSession()
 {
-  std::cout << "0" << std::endl;
   if (output_tensors_.size() > 0) {
     std::cout << output_tensors_.size() << std::endl;
     DeleteTensorVector(output_tensors_);
   }
-  std::cout << "A" << std::endl;
   if (input_tensors_.size() > 0) {
     DeleteTensorVector(input_tensors_);
   }
-  std::cout << "B" << std::endl;
   TF_CloseSession(session_, status_);
-  std::cout << "C" << std::endl;
   TF_DeleteSession(session_, status_);
-  std::cout << "D" << std::endl;
   TF_DeleteStatus(status_);
-  std::cout << "E" << std::endl;
   TF_DeleteGraph(graph_);
-  std::cout << "F" << std::endl;
 }
 
 bool TensorFlowSession::AddInputTensor(TF_DataType input_tf_type, const std::vector<std::int64_t>& input_dimensions, const void* input_data, std::size_t data_length)
 {
   if (input_dimensions.data() == nullptr || input_data == nullptr) {
-    std::cout << "D" << std::endl;
     return false;
   }
 
   TF_Tensor* input_tensor = TF_AllocateTensor(input_tf_type, input_dimensions.data(), static_cast<int>(input_dimensions.size()), data_length);
 
   if (input_tensor == nullptr) {
-    std::cout << "E" << std::endl;
     return false;
   }
 
   void* input_tensor_data = TF_TensorData(input_tensor);
   if (input_tensor_data == nullptr) {
     TF_DeleteTensor(input_tensor);
-    std::cout << "F" << std::endl;
     return false;
   }
   // Try a direct pointer swap here later.
@@ -119,24 +107,17 @@ bool TensorFlowSession::AddInputTensor(TF_DataType input_tf_type, const std::vec
 bool TensorFlowSession::RunInference(void)
 {
   if (input_operation_.data() == nullptr || output_operation_.data() == nullptr) {
-    std::cout << "G" << std::endl;
     return false;
   }
 
   if (input_tensors_.size() == 0) {
-    std::cout << "H" << std::endl;
     return false;
   }
-  // if (output_tensors_.data() != 0) {
-  //   std::cout << "H.1" << std::endl;
-  //   return false;
-  // }
-  // Important - delete old tensors!
+
   if (output_tensors_.size() > 0) {
     DeleteTensorVector(output_tensors_);
   }
   output_tensors_ = {nullptr};
-  std::cout << "Got 4.1" << std::endl;
   std::cout << output_tensors_.size() << std::endl;
   TF_SessionRun(session_,
               nullptr, // Run options.
@@ -147,16 +128,13 @@ bool TensorFlowSession::RunInference(void)
               status_ // Output status.
   );
 
-  std::cout << "Got 4.2" << std::endl;
   std::cout << input_tensors_.size() << std::endl;
   // Careful here - delete reference to data only?
   DeleteTensorVector(input_tensors_);
   std::cout << input_tensors_.size() << std::endl;
-  std::cout << "Got 4.3" << std::endl;
   if (TF_GetCode(status_) != TF_OK) {
     DeleteTensorVector(output_tensors_);
     DeleteTensorVector(input_tensors_);
-    std::cout << "I" << std::endl;
     return false;
   }
   return true;
@@ -181,7 +159,6 @@ TF_Buffer* TensorFlowSession::ReadBufferFromFile(const char* filename)
 {
   const auto file = std::fopen(filename, "rb");
   if (file == nullptr) {
-    std::cout << "J" << std::endl;
     return nullptr;
   }
 
@@ -191,12 +168,17 @@ TF_Buffer* TensorFlowSession::ReadBufferFromFile(const char* filename)
 
   if (filesize < 1) {
     std::fclose(file);
-    std::cout << "K" << std::endl;
     return nullptr;
   }
 
   const auto data = std::malloc(filesize);
-  std::fread(data, filesize, 1, file);
+  std::size_t readsize = std::fread(data, filesize, 1, file);
+  if (readsize != filesize) {
+    // Error handling
+    std::free(data);
+    return nullptr;
+  }
+
   std::fclose(file);
 
   TF_Buffer* buffer = TF_NewBuffer();
