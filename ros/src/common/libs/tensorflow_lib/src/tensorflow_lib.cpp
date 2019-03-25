@@ -20,9 +20,6 @@
  *  Created on: February 6th 2018
  */
 
-// #include <cstdio>
-// #include <stdio.h>
-// #include <cstdlib>
 #include <tensorflow_lib/tensorflow_lib.hpp>
 #include <cstdio>
 #include <cstdlib>
@@ -167,15 +164,17 @@ TF_Buffer* TensorFlowSession::ReadBufferFromFile(const char* filename)
   std::fseek(file, 0, SEEK_SET);
 
   if (filesize < 1) {
+    // Error handling
     std::fclose(file);
     return nullptr;
   }
 
   const auto data = std::malloc(filesize);
-  std::size_t readsize = std::fread(data, filesize, 1, file);
-  if (readsize != filesize) {
+  const auto readsize = std::fread(data, filesize, 1, file);
+  if (readsize < 1) {
     // Error handling
     std::free(data);
+    std::fclose(file);
     return nullptr;
   }
 
