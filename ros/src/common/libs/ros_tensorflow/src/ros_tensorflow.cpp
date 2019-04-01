@@ -15,12 +15,12 @@
  ********************
  *  v1.0: drwnz (david.wong@tier4.jp)
  *
- * tensorflow_lib.cpp
+ * ros_tensorflow.cpp
  *
  *  Created on: February 6th 2019
  */
 
-#include <tensorflow_lib/tensorflow_lib.hpp>
+#include <ros_tensorflow/ros_tensorflow.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>

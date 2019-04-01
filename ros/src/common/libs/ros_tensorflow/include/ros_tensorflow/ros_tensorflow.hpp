@@ -15,13 +15,13 @@
  ********************
  *  v1.0: drwnz (david.wong@tier4.jp)
  *
- * tensorflow_lib.hpp
+ * ros_tensorflow.hpp
  *
  *  Created on: February 6th 2019
  */
 
-#ifndef TENSORFLOW_LIB_HPP
-#define TENSORFLOW_LIB_HPP
+#ifndef ROS_TENSORFLOW_HPP
+#define ROS_TENSORFLOW_HPP
 
 #include <tensorflow/c/c_api.h>
 #include <cstdio>

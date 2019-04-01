@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>tensorflow_lib</name>
+  <name>ros_tensorflow</name>
   <version>1.10.0</version>
   <description>TensorFlow interface package</description>
   <maintainer email="david.wong@tier4.jp">David Wong</maintainer>

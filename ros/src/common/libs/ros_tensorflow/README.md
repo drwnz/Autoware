@@ -1,4 +1,4 @@
-# TensorFlow interface library
+# TensorFlow interface for ROS
 
 This Autoware package provides a simple interface to the TensorFlow C API.
 
@@ -16,7 +16,7 @@ Detailed instructions coming soon...
 This library implements a class,`TensorFlowSession` which loads a TensorFlow graph. Here is a minimal example to illustrate usage:
 
 ```cpp
-#include <tensorflow_lib/tensorflow_lib.hpp>
+#include <ros_tensorflow/ros_tensorflow.hpp>
 
 /*
 Create a new session:
