@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(tensorflow_lib)
 
-FIND_PACKAGE(catkin REQUIRED COMPONENTS)
+find_package(catkin REQUIRED COMPONENTS)
 
-FIND_PACKAGE(CUDA)
-FIND_PACKAGE(OpenCV REQUIRED)
-
+find_package(CUDA)
 
 SET(CMAKE_CXX_FLAGS "-std=c++11 -O2 -g -Wall ${CMAKE_CXX_FLAGS}")
 
@@ -16,15 +14,14 @@ if (TENSORFLOW)
     INCLUDE_DIRS include
     LIBRARIES tensorflow_lib
     )
-  INCLUDE_DIRECTORIES(tensorflow_lib
+  include_directories(tensorflow_lib
     include
     ${catkin_INCLUDE_DIRS}
-    ${autoware_msgs_INCLUDE_DIRS}
     )
-  ADD_LIBRARY(tensorflow_lib
+  add_library(tensorflow_lib
     src/tensorflow_lib.cpp
     )
-  TARGET_LINK_LIBRARIES(tensorflow_lib
+  target_link_libraries(tensorflow_lib
     ${catkin_LIBRARIES}
     )
   add_dependencies(tensorflow_lib
@@ -40,5 +37,5 @@ if (TENSORFLOW)
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     )
 else ()
-  message("'Tensorflow' is not installed. The library 'tensorflow_lib' will not be built.")
+  message("'TensorFlow' is not installed. The library 'tensorflow_lib' will not be built.")
 endif ()

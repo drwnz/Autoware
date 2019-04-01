@@ -3,9 +3,9 @@
   <name>tensorflow_lib</name>
   <version>1.10.0</version>
   <description>TensorFlow interface package</description>
-  <maintainer email="david.wong@tier4.jp">David WONG</maintainer>
+  <maintainer email="david.wong@tier4.jp">David Wong</maintainer>
   <license>Apache 2</license>
-  <author email="david.wong@tier4.jp">David WONG</author>
+  <author email="david.wong@tier4.jp">David Wong</author>
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>autoware_build_flags</buildtool_depend>
   <build_depend>roscpp</build_depend>
